@@ -1,72 +1,80 @@
-// 🔥 Firebase config (PASTE YOUR OWN)
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
-  projectId: "YOUR_PROJECT",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-let username = "";
-let room = "";
+let user = "";
+let room = "private_chat";
 
-// CREATE ROOM
-function createRoom() {
-  username = document.getElementById("username").value;
-  if (!username) return alert("Enter name");
+// LOGIN
+function login() {
+  user = document.getElementById("loginName").value;
+  if (!user) return alert("Enter username");
 
-  room = "room_" + Math.floor(Math.random() * 100000);
-  startChat();
-}
-
-// JOIN ROOM
-function joinRoom() {
-  username = document.getElementById("username").value;
-  room = document.getElementById("roomInput").value;
-
-  if (!username || !room) {
-    alert("Enter name & room code");
-    return;
-  }
-  startChat();
-}
-
-// START CHAT
-function startChat() {
-  document.getElementById("home").classList.add("hidden");
+  document.getElementById("login").classList.add("hidden");
   document.getElementById("chat").classList.remove("hidden");
-  document.getElementById("roomName").innerText = "Room: " + room;
 
-  db.ref(room).on("child_added", function(snapshot) {
-    const data = snapshot.val();
-    showMessage(data.name, data.message);
-  });
+  db.ref("status/" + user).set("online");
+  listenMessages();
+}
+
+// LOGOUT
+function logout() {
+  db.ref("status/" + user).set("offline");
+  location.reload();
 }
 
 // SEND MESSAGE
 function sendMsg() {
   const msg = document.getElementById("msg").value;
-  if (msg === "") return;
+  const img = document.getElementById("imgInput").files[0];
 
-  db.ref(room).push({
-    name: username,
-    message: msg
-  });
+  if (msg === "" && !img) return;
+
+  if (img) {
+    const reader = new FileReader();
+    reader.onload = function() {
+      db.ref(room).push({ name: user, image: reader.result });
+    };
+    reader.readAsDataURL(img);
+    document.getElementById("imgInput").value = "";
+  } else {
+    db.ref(room).push({ name: user, text: msg });
+  }
 
   document.getElementById("msg").value = "";
 }
 
-// SHOW MESSAGE
-function showMessage(name, msg) {
-  const div = document.createElement("div");
-  div.className = "message " + (name === username ? "me" : "friend");
-  div.innerText = name + ": " + msg;
-  document.getElementById("messages").appendChild(div);
+// RECEIVE
+function listenMessages() {
+  db.ref(room).on("child_added", snap => {
+    const data = snap.val();
+    const div = document.createElement("div");
+    div.className = "message " + (data.name === user ? "me" : "friend");
+
+    if (data.text) div.innerText = data.name + ": " + data.text;
+    if (data.image) {
+      const img = document.createElement("img");
+      img.src = data.image;
+      img.style.width = "100%";
+      div.appendChild(img);
+    }
+
+    document.getElementById("messages").appendChild(div);
+  });
 }
 
-// LEAVE ROOM
-function leaveRoom() {
-  location.reload();
+// EMOJI
+function addEmoji() {
+  document.getElementById("msg").value += "😊";
+}
+
+// DARK MODE
+function toggleDark() {
+  document.body.classList.toggle("dark");
+  document.body.classList.toggle("light");
 }
