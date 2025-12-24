@@ -1,23 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Private Chat</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="chat-container">
+<!-- HOME SCREEN -->
+<div id="home" class="card">
+  <h2>💬 Private Chat</h2>
+
+  <input id="username" placeholder="Your name">
+
+  <input id="roomInput" placeholder="Room code">
+
+  <button onclick="joinRoom()">Join Room</button>
+  <button class="secondary" onclick="createRoom()">Create New Room</button>
+</div>
+
+<!-- CHAT SCREEN -->
+<div id="chat" class="chat-container hidden">
 
   <div class="chat-header">
-    <h3>Private Chat</h3>
-    <p id="roomName"></p>
+    <span id="roomName"></span>
+    <button onclick="leaveRoom()">❌</button>
   </div>
 
   <div id="messages" class="chat-messages"></div>
 
   <div class="chat-input">
-    <input type="text" id="msg" placeholder="Type message 😊">
-    <input type="file" id="img">
+    <input id="msg" placeholder="Type message 😊">
     <button onclick="sendMsg()">Send</button>
   </div>
 
@@ -29,5 +42,3 @@
 
 </body>
 </html>
-
-
