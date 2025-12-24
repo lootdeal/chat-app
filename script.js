@@ -1,94 +1,72 @@
-body {
-  background: #eae6df;
-  font-family: Arial, sans-serif;
+// 🔥 Firebase config (PASTE YOUR OWN)
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let username = "";
+let room = "";
+
+// CREATE ROOM
+function createRoom() {
+  username = document.getElementById("username").value;
+  if (!username) return alert("Enter name");
+
+  room = "room_" + Math.floor(Math.random() * 100000);
+  startChat();
 }
 
-.card {
-  width: 320px;
-  background: white;
-  padding: 20px;
-  margin: 100px auto;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+// JOIN ROOM
+function joinRoom() {
+  username = document.getElementById("username").value;
+  room = document.getElementById("roomInput").value;
+
+  if (!username || !room) {
+    alert("Enter name & room code");
+    return;
+  }
+  startChat();
 }
 
-.card input {
-  width: 100%;
-  padding: 10px;
-  margin: 8px 0;
+// START CHAT
+function startChat() {
+  document.getElementById("home").classList.add("hidden");
+  document.getElementById("chat").classList.remove("hidden");
+  document.getElementById("roomName").innerText = "Room: " + room;
+
+  db.ref(room).on("child_added", function(snapshot) {
+    const data = snapshot.val();
+    showMessage(data.name, data.message);
+  });
 }
 
-.card button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  background: #075e54;
-  color: white;
-  border: none;
-  cursor: pointer;
+// SEND MESSAGE
+function sendMsg() {
+  const msg = document.getElementById("msg").value;
+  if (msg === "") return;
+
+  db.ref(room).push({
+    name: username,
+    message: msg
+  });
+
+  document.getElementById("msg").value = "";
 }
 
-.secondary {
-  background: #128c7e;
+// SHOW MESSAGE
+function showMessage(name, msg) {
+  const div = document.createElement("div");
+  div.className = "message " + (name === username ? "me" : "friend");
+  div.innerText = name + ": " + msg;
+  document.getElementById("messages").appendChild(div);
 }
 
-.chat-container {
-  width: 380px;
-  height: 600px;
-  margin: 30px auto;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 10px;
-}
-
-.chat-header {
-  background: #075e54;
-  color: white;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.chat-messages {
-  flex: 1;
-  padding: 10px;
-  background: #e5ddd5;
-  overflow-y: auto;
-}
-
-.message {
-  margin: 6px 0;
-  padding: 8px;
-  border-radius: 8px;
-  max-width: 70%;
-}
-
-.me {
-  background: #dcf8c6;
-  margin-left: auto;
-}
-
-.friend {
-  background: white;
-}
-
-.chat-input {
-  display: flex;
-  padding: 10px;
-}
-
-.chat-input input {
-  flex: 1;
-  padding: 8px;
-}
-
-.chat-input button {
-  margin-left: 5px;
-  padding: 8px 12px;
-}
-
-.hidden {
-  display: none;
+// LEAVE ROOM
+function leaveRoom() {
+  location.reload();
 }
