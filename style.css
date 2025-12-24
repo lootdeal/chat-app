@@ -1,15 +1,45 @@
 body {
-  font-family: Arial;
-  background: #ece5dd;
+  background: #eae6df;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  width: 320px;
+  background: white;
+  padding: 20px;
+  margin: 100px auto;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.card button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: #075e54;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.secondary {
+  background: #128c7e;
 }
 
 .chat-container {
   width: 380px;
   height: 600px;
-  background: white;
   margin: 30px auto;
   display: flex;
   flex-direction: column;
+  background: white;
   border-radius: 10px;
 }
 
@@ -17,17 +47,19 @@ body {
   background: #075e54;
   color: white;
   padding: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .chat-messages {
   flex: 1;
   padding: 10px;
-  overflow-y: auto;
   background: #e5ddd5;
+  overflow-y: auto;
 }
 
 .message {
-  margin: 8px;
+  margin: 6px 0;
   padding: 8px;
   border-radius: 8px;
   max-width: 70%;
@@ -52,6 +84,11 @@ body {
   padding: 8px;
 }
 
-button {
+.chat-input button {
   margin-left: 5px;
+  padding: 8px 12px;
+}
+
+.hidden {
+  display: none;
 }
