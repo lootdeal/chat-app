@@ -1,36 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Private Chat</title>
+  <title>Chat App</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="light">
 
-<!-- HOME SCREEN -->
-<div id="home" class="card">
-  <h2>💬 Private Chat</h2>
-
-  <input id="username" placeholder="Your name">
-
-  <input id="roomInput" placeholder="Room code">
-
-  <button onclick="joinRoom()">Join Room</button>
-  <button class="secondary" onclick="createRoom()">Create New Room</button>
+<!-- LOGIN -->
+<div id="login" class="card">
+  <h2>Login</h2>
+  <input id="loginName" placeholder="Enter username">
+  <button onclick="login()">Login</button>
 </div>
 
-<!-- CHAT SCREEN -->
+<!-- CHAT -->
 <div id="chat" class="chat-container hidden">
 
   <div class="chat-header">
-    <span id="roomName"></span>
-    <button onclick="leaveRoom()">❌</button>
+    <span id="status">Offline</span>
+    <div>
+      <button onclick="toggleDark()">🌙</button>
+      <button onclick="logout()">❌</button>
+    </div>
   </div>
 
   <div id="messages" class="chat-messages"></div>
 
+  <div class="typing" id="typing"></div>
+
   <div class="chat-input">
-    <input id="msg" placeholder="Type message 😊">
+    <button onclick="addEmoji()">😊</button>
+    <input id="msg" placeholder="Type message">
+    <input type="file" id="imgInput">
     <button onclick="sendMsg()">Send</button>
   </div>
 
